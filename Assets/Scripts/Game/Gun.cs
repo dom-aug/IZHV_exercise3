@@ -200,11 +200,26 @@ public class Gun : MonoBehaviour
          *  - Number / spread of shotgun bullets : shotgunBullets, shotgunSpread
          * Implement both single shot and shotgun (swap by pressing <SPACE> by default)
          */
-        
-        SpawnBullet(
-            new Vector3{ x = 0.0f, y = 0.0f, z = 0.0f }, 
-            Quaternion.Euler(0.0f, 0.0f, 0.0f)
-        );
+
+        if (shotgun)
+        {
+            Quaternion rotation;
+            var currentBulletAngleOffset = -shotgunSpread / 2.0f;
+            var bulletAngleDifference = shotgunSpread / (shotgunBullets - 1);
+
+            for (int i = 0; i < shotgunBullets; i++)
+            {
+                rotation = Quaternion.Euler(director.eulerAngles + new Vector3(0.0f, 0.0f, currentBulletAngleOffset));
+                currentBulletAngleOffset += bulletAngleDifference;
+                
+                SpawnBullet(director.position, rotation);
+            }
+        }
+        else
+        {
+            var rotation = Quaternion.Euler(director.eulerAngles);
+            SpawnBullet(director.position, rotation);
+        }
     }
 
     /// <summary>
